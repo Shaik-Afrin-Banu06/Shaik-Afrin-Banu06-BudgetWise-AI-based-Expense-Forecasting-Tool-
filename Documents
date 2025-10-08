@@ -1,0 +1,181 @@
+AI-Powered Budget Expense Forecasting Tool
+🎯 Objective
+
+The goal of this project is to predict future monthly expenses using historical financial data.
+The tool helps users manage their budget better by forecasting spending patterns for the next 6 months using machine learning.
+
+🔹 Step 1: Data Collection & Understanding
+📂 Source:
+
+Excel File: Monthly_Summary_2023_2026.xlsx
+
+Duration: 2023 – 2026
+
+Total Rows: 48 (Monthly data for 4 years)
+
+📑 Columns:
+Column Name	Description
+Year-Month	Monthly timestamp (e.g., 2023-01)
+Total Income (₹)	Total income for the month
+Total Expenses (₹)	Total spending for the month
+Net Savings (₹)	Income minus expenses
+(Later added) Food, Rent, Fees, Electricity Bill, Recharge Bill	Category-wise monthly expense distribution
+🔹 Step 2: Data Preprocessing
+🧭 Purpose:
+
+To clean and transform raw data into a format suitable for machine learning.
+
+🧩 Steps Performed:
+
+Reading the dataset
+
+import pandas as pd
+df = pd.read_excel(r"C:\Users\SHAIK AFRIN BANU\Downloads\Monthly_Summary_2023_2026.xlsx")
+
+
+Renaming columns for consistency
+
+df.columns = ['year_month', 'total_income', 'total_expenses', 'net_savings', 
+              'food', 'rent', 'fees', 'electricity_bill', 'recharge_bill']
+
+
+Converting the date column to datetime format
+
+df['year_month'] = pd.to_datetime(df['year_month'], format='%Y-%m')
+
+
+Sorting chronologically
+
+df = df.sort_values('year_month')
+
+
+Extracting date-based features
+
+df['year'] = df['year_month'].dt.year
+df['month'] = df['year_month'].dt.month
+
+
+Saving processed data
+
+df.to_csv("processed_monthly_data.csv", index=False)
+
+
+✅ Result: Clean, structured dataset ready for modeling.
+
+🔹 Step 3: Model Development
+🧠 Objective:
+
+Use a regression model to forecast future expenses for the next 6 months.
+
+⚙️ Model Used:
+
+Linear Regression (from sklearn.linear_model)
+
+💡 Logic:
+
+Create a time index (t) for each month.
+
+Train the model on t → Total Expenses.
+
+Predict for the next 6 months (future t values).
+
+🧮 Code:
+from sklearn.linear_model import LinearRegression
+import numpy as np
+
+# Create a copy and add time index
+expenses = df[['year_month', 'total_expenses']].copy()
+expenses['t'] = np.arange(len(expenses))
+
+# Train-test split
+train = expenses.iloc[:-6]
+test = expenses.iloc[-6:]
+
+# Train model
+model = LinearRegression()
+model.fit(train[['t']], train['total_expenses'])
+
+# Predict future expenses (6 months)
+future_t = np.arange(len(expenses), len(expenses) + 6)
+future_pred = model.predict(pd.DataFrame({'t': future_t}))
+
+🔹 Step 4: Forecasting & Visualization
+📈 Future Forecast:
+import matplotlib.pyplot as plt
+import pandas as pd
+
+future_dates = pd.date_range(start=expenses['year_month'].iloc[-1] + pd.offsets.MonthBegin(1), 
+                             periods=6, freq='MS')
+
+forecast_df = pd.DataFrame({
+    'Year-Month': future_dates,
+    'Predicted Expenses (₹)': future_pred
+})
+
+🖼️ Visualization
+plt.figure(figsize=(8,4))
+plt.plot(expenses['year_month'], expenses['total_expenses'], label='Actual')
+plt.plot(forecast_df['Year-Month'], forecast_df['Predicted Expenses (₹)'], '--', label='Forecast')
+plt.title('Next 6-Month Expense Forecast')
+plt.xlabel('Month')
+plt.ylabel('Expenses (₹)')
+plt.legend()
+plt.grid(True)
+plt.show()
+
+
+✅ Outcome: Forecast graph showing future monthly expense trends.
+
+🔹 Step 5: Category-Wise Forecasting
+🎯 Goal:
+
+Predict future spending patterns for each expense category (Food, Rent, Fees, Electricity Bill, Recharge Bill).
+
+categories = ['food', 'rent', 'fees', 'electricity_bill', 'recharge_bill']
+from sklearn.linear_model import LinearRegression
+
+all_forecasts = []
+
+for cat in categories:
+    data = df[['year_month', cat]].copy()
+    data['t'] = np.arange(len(data))
+    
+    model = LinearRegression()
+    model.fit(data[['t']], data[cat])
+    
+    future_t = np.arange(len(data), len(data)+6)
+    pred = model.predict(pd.DataFrame({'t': future_t}))
+    future_dates = pd.date_range(start=data['year_month'].iloc[-1] + pd.offsets.MonthBegin(1), periods=6, freq='MS')
+    
+    forecast = pd.DataFrame({'Category': cat, 'Year-Month': future_dates, 'Predicted Expense (₹)': pred})
+    all_forecasts.append(forecast)
+
+
+✅ Result: Each category has its own 6-month forecast.
+
+🔹 Step 6: Output & Insights
+📊 Generated Outputs:
+
+processed_monthly_data.csv → Cleaned dataset
+
+category_forecast.csv → Category-wise predictions
+
+Forecast Graphs → Trend visualization
+
+💬 Key Insights:
+
+Expenses show steady growth across months.
+
+Categories like Rent and Food remain consistent.
+
+Electricity and Fees vary seasonally.
+
+The model can help anticipate high-expense months and plan savings better.
+
+🏁 Step 7: Future Scope
+
+Integrate the model with Streamlit Dashboard for interactive forecasting.
+
+Add seasonality detection using ARIMA/Prophet models.
+
+Enable personalized budgets based on user input and lifestyle patterns.
