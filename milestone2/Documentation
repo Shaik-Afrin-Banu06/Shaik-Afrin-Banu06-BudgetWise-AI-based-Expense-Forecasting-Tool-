@@ -1,0 +1,119 @@
+🧠 BudgetWise – AI-Powered Expense Forecasting Tool
+
+A Smart Financial Assistant that automates expense tracking, categorizes spending, and predicts future expenses using AI.
+
+🎯 Objective
+
+To help users manage their budget effectively by:
+
+✅ Uploading & categorizing expenses automatically
+✅ Visualizing category-wise spending
+✅ Forecasting future expenses using Machine Learning
+✅ Providing insights to reduce overspending
+
+Built using Python + Streamlit + SQLite + Scikit-Learn + Matplotlib.
+
+📂 Step 1: Data Collection & Processing
+
+Users upload transaction files (CSV).
+The system applies automatic categorization using custom keyword mapping.
+
+📑 Processed Data Format
+Column	Description
+Date	Transaction date (YYYY-MM-DD)
+Description	What user purchased / payment note
+Amount (₹)	Transaction amount
+Type	Income / Expense
+Category	Auto-assigned (e.g., Food, Rent...)
+User	Logged-in username
+🔍 Step 2: Auto-Categorization Engine
+
+Rule-based keyword matcher groups spending into categories:
+
+✅ Food
+✅ Rent
+✅ Electricity Bill
+✅ Recharge Bill
+✅ Travel
+✅ Entertainment
+✅ Shopping
+✅ Healthcare
+✅ Household
+✅ Others…
+
+🧠 Future-ready for NLP enhancement
+
+📊 Step 3: Dashboard & Analytics
+
+Once data is uploaded, users get:
+
+✔ Income vs Expense metrics
+✔ Net savings calculation
+✔ Pie chart of category-wise spending
+✔ Monthly trend line charts
+✔ Editable transaction table
+
+📌 Built using: Pandas + Matplotlib + Streamlit Charts
+
+🤖 Step 4: Expense Forecasting (AI/ML)
+
+Model Used: Linear Regression (Sklearn)
+Goal: Predict next 6 months of expenses based on history.
+
+✅ Functions Implemented
+
+✔ Aggregates monthly totals
+✔ Converts to time-indexed series
+✔ Predicts future expenses
+✔ Displays forecast chart with trend line
+
+Helps users plan ahead and avoid financial risks.
+
+🔐 Step 5: User Authentication
+
+Simple login system implemented with:
+
+✔ Streamlit session state
+✔ Dynamic UI based on login status
+✔ Logout + state clear function
+
+📌 SQLite DB used for storing uploaded transaction data.
+
+🖼️ Screenshots (for README — you will insert)
+
+✅ Login Page
+✅ Upload CSV Page
+✅ Dashboard – Metrics + Charts
+✅ Forecast Visualization
+✅ Category-wise Pie Chart
+
+✅ Project Outcomes
+Feature	Status
+CSV upload	✅
+Auto categorization	✅
+Analytics dashboard	✅
+Forecasting (6-month)	✅
+User login/logout	✅
+Category-wise visualization	✅
+Editable data table	✅
+🚀 Tech Stack
+Layer	Technology
+UI / Web	Streamlit
+Backend Storage	SQLite
+ML Models	Scikit-Learn
+Data Wrangling	Pandas, NumPy
+Visualization	Matplotlib
+🔮 Future Enhancements
+
+📌 Add Prophet / ARIMA for seasonal accuracy
+📌 Push notifications for overspending alerts
+📌 Export forecast reports as PDF
+📌 Mobile-friendly UI
+📌 Real bank API integration
+
+📁 How to Run
+pip install -r requirements.txt
+streamlit run app.py
+
+
+Upload expenses → View dashboard → Forecast future 🔥
